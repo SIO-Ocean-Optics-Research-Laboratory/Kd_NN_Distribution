@@ -43,6 +43,6 @@ Directory of functions and data used to test and evaluate the performance of KdN
 >>
 
 ---
-Matthew Kehrli, Aster Taylor, Rick Reynolds & Dariusz Stramski
+Matthew Kehrli, Aster Taylor, Rick Reynolds & Dariusz Stramski\
 *mdkehrli@ucsd.edu | mdkehrli@gmail.com\
 Ocean Optics Research Laboratory, Scripps Institiution of Oceanography, University of California San Diego
