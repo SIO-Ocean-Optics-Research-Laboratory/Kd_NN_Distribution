@@ -3,7 +3,10 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
 %Loisel/Jamet neural net, returns the Kd values for each wavelength and
 %sample.
 %
-%Reference: 
+%Reference:Jamet, C., H., Loisel and D., Dessailly (2012). Retrieval of the
+%spectral diffuse attenuation coefficient Kd(l) in open and coastal ocean
+%waters using a neural network inversion, Journal of Geophysical
+%Research-Oceans, 117, C10023, doi:10.1029/2012JC008076.
 %
 %Requred function inputs:
 %   R_rs [mx5 Double]: Remote sensing reflectance at MODIS wavelengths 
@@ -185,19 +188,22 @@ function [Kd_est]=MLP_Kd(x,w1,b1,w2,b2,wout,bout,muKd,stdKd)
 %		
 %       w1 (nc1 x ni Double): Connection weights of the first hidden layer, 
 %		which has (nc1) neurons and connects to the (ni) nuerons in the 
-%		input layer. 
+%		input layer.
+%
 %		b1 (nc1 x 1 Double): Neuron bias of the first hidden layer, which
 %		has (nc1) neurons.
 %
 %		w2 (nc2 x nc1 Double): Connection weights of the second hidden
 %		layer, which has (nc2) neurons. This connects to the (nc1) neurons
-%		in the first hidden layer. 
+%		in the first hidden layer.
+%
 %		b2 (nc2 x 1 Double): Neuron bias of the second hidden layer, which
 %		has (nc2) neurons.
 %       
 %       wout (1 x nc2 Double): Connection weights of the output layer, 
 %       which connects to the (nc2) neurons of the second hidden layer and
-%       returns only a single output. 
+%       returns only a single output.
+%
 %       bout (1x1 Double): Neuron bias of the output layer, which only has
 %       1 neuron
 %
@@ -219,11 +225,10 @@ function [Kd_est]=MLP_Kd(x,w1,b1,w2,b2,wout,bout,muKd,stdKd)
 %Ocean Optics Research Laboratory
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-[rx,~]=size(x); %get the number of rows/samples
+%get the number of rows/samples
+[rx,~]=size(x);
 
 % Forwarding data through the NN:
-
 % compute first hidden layer, using tanh activation function
 a=1.715905*tanh(0.6666667*(x*w1'+(b1*ones(1,rx))'));
 % compute second hidden layer, using tanh activation function
