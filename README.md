@@ -1,6 +1,6 @@
 # Kd_NN_Distribution
 ---
-An implementation of the neural net created by Cedric Jamet for estimating the K<sub>d</sub> values at any wavelength. It produces K<sub>d</sub> from 412 to 670 nm, using input R<sub>rs</sub> at MODIS wavelengths (443 nm, 488 nm, 531 nm, 547 nm, 667 nm). The software isincorporated into Loisel and Stramski 2 (LS2), and provides K<sub>d</sub> values. The complete development and validation of the Kd NN model is described in [Jamet et al. 2012](https://doi.org/10.1029/2012JC008076) and updated in [Loisel et al. 2018](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JC013632). In correspondance with our collaborators we have converted Kd NN model source code into MATLAB file format.
+An implementation of the neural net created by Cedric Jamet for estimating the K<sub>d</sub> values at any wavelength. The model produces K<sub>d</sub> from 412 to 670 nm, using input R<sub>rs</sub> at MODIS wavelengths (443 nm, 488 nm, 531 nm, 547 nm, 667 nm). The software isincorporated into Loisel and Stramski 2 (LS2), and provides K<sub>d</sub> values. The complete development and validation of the Kd NN model is described in [Jamet et al. 2012](https://doi.org/10.1029/2012JC008076) and updated in [Loisel et al. 2018](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JC013632). In correspondance with our collaborators we have converted Kd NN model source code into MATLAB file format.
 
 This README document provides infromation about the files within the Kd_NN_Distribution repository.
 
