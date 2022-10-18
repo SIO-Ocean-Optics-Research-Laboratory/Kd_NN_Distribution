@@ -70,7 +70,7 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
     %if there are negative input Rrs, set to NaN
     Rrs(Rrs<0)=NaN;
 
-    %combines inputs
+    %combine inputs
     inputs = [Rrs,lam,muw];
 
     %read in weights and biases for the NN
@@ -79,17 +79,17 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
 
     %Build the neural nets, case 2 then case 1 waters
 
-    %Read in weights and biases for case 2 waters:
-    %Number of inputs
+    %read in weights and biases for case 2 waters:
+    %number of inputs
     ne = 7;
-    %Number of neurons on the first hidden layer
+    %number of neurons on the first hidden layer
     nc1 = 9;
-    %Number of neurons on the second hidden layer
+    %number of neurons on the second hidden layer
     nc2 = 6;
-    %Number of neurons on the output layer
+    %number of neurons on the output layer
     ns = 1;
 
-    %Read case 2 NN LUT as weight and bias matricies 
+    %read case 2 NN LUT as weight and bias matricies 
     b1_2 = weights_2.('b1'); b1_2(isnan(b1_2)) = [];
     b2_2 = weights_2.('b2'); b2_2(isnan(b2_2)) = [];
     bout_2 = weights_2.('bout'); bout_2(isnan(bout_2)) = [];
@@ -98,17 +98,17 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
     w2_2 = weights_2.('w2'); w2_2(isnan(w2_2)) = []; w2_2=reshape(w2_2,nc2,nc1);
     wout_2 = weights_2.('wout'); wout_2(isnan(wout_2)) = [];wout_2=reshape(wout_2,ns,nc2);
 
-    %Read in weights and biases for case 1 waters:
-    %Number of inputs
+    %read in weights and biases for case 1 waters:
+    %number of inputs
     ne = 6;
-    %Number of neurons on the first hidden layer
+    %number of neurons on the first hidden layer
     nc1 = 8;
-    %Number of neurons on the second hidden layer
+    %number of neurons on the second hidden layer
     nc2 = 6;
-    %Number of neurons on the output layer
+    %number of neurons on the output layer
     ns = 1;
 
-    %Read case 1 NN LUT as weight and bias matricies 
+    %read case 1 NN LUT as weight and bias matricies 
     b1_1 = weights_1.('b1'); b1_1(isnan(b1_1)) = [];
     b2_1 = weights_1.('b2'); b2_1(isnan(b2_1)) = [];
     bout_1 = weights_1.('bout'); bout_1(isnan(bout_1)) = [];
@@ -117,7 +117,7 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
     w2_1 = weights_1.('w2');w2_1(isnan(w2_1)) = []; w2_1 = reshape(w2_1,nc2,nc1);
     wout_1 = weights_1.('wout'); wout_1(isnan(wout_1)) = []; wout_1 = reshape(wout_1,ns,nc2);
 
-    %Mean and standard deviation LUT for each NN, from training dataset of
+    %mean and standard deviation LUT for each NN, from training dataset of
     %40,000 inputs to normalize input data
     train_switch = Kd_LUT.train_switch;
     mu_switch = train_switch.('MEAN')';
