@@ -10,24 +10,28 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
 %
 %Requred function inputs:
 %   R_rs [mx5 Double]: Remote sensing reflectance at MODIS wavelengths 
-%       (443, 488, 531, 547, 667).
+%       (443, 488, 531, 547, 667 nm) [sr^-1]
 %
-%   sza [mx1 Double]: Solar zenith angle in degrees for each sample (m). 
+%   sza [mx1 Double]: Solar zenith angle for each sample [deg] 
 %
-%   lam [mx1 Double]: Output wavelength
+%   lam [mx1 Double]: Output wavelength [nm]; also an input parameter for
+%   the neural network
 %
 %   Kd_LUT [1x1 Structure]: Structure containing three required look-up
 %   tables; can be loaded via load('Kd_NN_LUT.mat')
 %
-%       Kd_LUT.weights_1:
+%       Kd_LUT.weights_1: LUT of weights and biases from NN for case 1
+%       waters
 %
-%       Kd_LUT.weights_2:
+%       Kd_LUT.weights_2: LUT of weights and biases from NN for case 2
+%       waters
 %
-%       Kd_LUT.train_switch: 
+%       Kd_LUT.train_switch: LUT of means and standard deviations of 40000
+%       inputs and outputs used to train the neural net
 %
 %Outputs: Kd_est
-%   Kd_est (mx1 Double): The estimated Kd values for each sample (m) at
-%   each wavelength given, or Kd(lam).
+%   Kd_est (mx1 Double): The estimated Kd values for each sample at
+%   each wavelength given, or Kd(lam) [m^-1]
 % 
 %Created: July 6, 2022
 %Completed: July 12, 2022
@@ -45,13 +49,17 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
         Kd_LUT (1,1) struct
     end
 
-    %Number of samples
+    %number of samples
     nsamp = size(Rrs,1); 
 
+    %copy input lambdas into an array to match the number of samples if
+    %only one input wavelength is provided
     if length(lam)==1
         lam=repmat(lam,nsamp,1);
     end
 
+    %copy input szas into an array to match the number of samples if
+    %only one input wavelength is provided
     if length(sza)==1
         sza=repmat(sza,nsamp,1);
     end
@@ -59,7 +67,7 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
     %compute muw from the sza
     muw = cosd(asind(sind(sza)/1.34));
 
-    %if there are negative Rrs, set to NaN
+    %if there are negative input Rrs, set to NaN
     Rrs(Rrs<0)=NaN;
 
     %combines inputs
@@ -123,22 +131,23 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
     mu_1 = mu_switch([2:5,7:9]);
     std_1 = std_switch([2:5,7:9]);
 
-    % CALCULATE THE RATIO OF Rrs488/Rrs547
+    %calculate the ratio of Rrs488/Rrs547 to classify input Rrs as case 1
+    %or case 2
     ratio = inputs(:,2)./inputs(:,4);
 
-    %find which samples are case 1/case 2
+    %find which samples are case 1 or case 2
     val_2 = find(ratio<0.85);
     val_1 = find(ratio>=0.85);
 
-    %get case 1 and case 2 water type data
+    %get case 1 and case 2 water type inputs
     x_case1 = inputs(val_1,[1:4,6:7]); 
     x_case2 = inputs(val_2,1:7);
 
-    %set up normalization
+    %pre allocate for input normalization
     x_case2_N = ones(size(x_case2));
     x_case1_N = ones(size(x_case1));
 
-    %normalize input data
+    %normalize input data for case 1 and case 2 waters
     for j = 1:7 
         x_case2_N(:,j) = (2/3)*((x_case2(:,j)-mu_2(j))/std_2(j));
     end
@@ -146,20 +155,20 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
         x_case1_N(:,j) = (2/3)*((x_case1(:,j)-mu_1(j))/std_1(j));
     end
 
-    %Inversion for case 2
+    %Kd inversion for case 2
     [Kd_est_case2] = MLP_Kd(x_case2_N,w1_2,b1_2,w2_2,b2_2,wout_2,...
         bout_2,mu_2(8),std_2(8));
 
-    %Inversion for case 1
+    %Kd inversion for case 1
     [Kd_est_case1] = MLP_Kd(x_case1_N,w1_1,b1_1,w2_1,b2_1,wout_1,...
         bout_1,mu_1(7),std_1(7));
 
-    %combine output
+    %combine output into single variable
     Kd_est(val_1) = Kd_est_case1;
     Kd_est(val_2) = Kd_est_case2;
     Kd_est = Kd_est';
 
-    %sets any inputs with NaNs to NaN
+    %set all inputs which contain NaNs to output NaN
     Kd_est(isnan(sum(inputs,2))) = NaN;
 end
 %end of main code
@@ -210,7 +219,7 @@ function [Kd_est]=MLP_Kd(x,w1,b1,w2,b2,wout,bout,muKd,stdKd)
 %       muKd (1x1 Double): The mean of the output training values, for
 %       denormalization of the output.
 %
-%       stdKd (1x1 Double): The std of the outputtraining values, for
+%       stdKd (1x1 Double): The std of the output training values, for
 %       denormalization of the output.
 
 % Outputs: Kd_est
