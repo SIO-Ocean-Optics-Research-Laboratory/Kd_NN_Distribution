@@ -10,7 +10,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars; close all; clc
 
-%%% Testing the NN on given data 
+%%% Input Rrs, lambda, and sza
 inputs=[0.00663061627778120,0.00569886961307466,0.00261783091270704,...
     0.00206376550494829,0.000155664525215032,430,0.927777329428063;...
     0.00278698717627185,0.00555055435696759,0.00965557516418457,...
@@ -212,12 +212,15 @@ inputs=[0.00663061627778120,0.00569886961307466,0.00261783091270704,...
     0.00489507612941246,0.00559138801542992,0.00550275864529340,...
     0.00518392703615246,0.000703464363357699,480,1];
 
+%Convert input sza to deg
 muw=inputs(:,7);
 sza=asind(1.34*sind(acosd(muw)));
 
+%Load LUT with weights, biases, means, and standard deviation
 input_Kd_NN_LUT = load('Kd_NN_LUT.mat');
 input_Kd_NN_LUT = input_Kd_NN_LUT.Kd_NN_LUT;
 
+%Calculate Kd using NN
 Kd_est=Kd_NN(inputs(:,1:5),sza,inputs(:,6),input_Kd_NN_LUT);
 
 %Save inputs and outputs into an excel file
