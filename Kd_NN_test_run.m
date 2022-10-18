@@ -1,8 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% MATLAB CODE FOR THE ESTIMATION OF THE DIFFUSE ATTENUATION COEFFICIENT
-% FROM RRS SPECTRUM
-%
-% Running code to check the accuracy of the KdNN code. References: Jamet,
+% Run code to check the accuracy of the KdNN code. References: Jamet,
 % C., H., Loisel and D., Dessailly (2012). Retrieval of the spectral
 % diffuse attenuation coefficient Kd(l) in open and coastal ocean waters
 % using a neural network inversion, Journal of Geophysical Research-Oceans,
