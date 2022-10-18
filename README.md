@@ -20,6 +20,6 @@ Spreadsheet containing the input and resulting output parameters obtained from t
 
 ---
 
-Matthew Kehrli, Aster Taylor, Rick Reynolds & Dariusz Stramski\
+Matthew Kehrli*, Aster Taylor, Rick Reynolds & Dariusz Stramski\
 *mdkehrli@ucsd.edu | mdkehrli@gmail.com\
 Ocean Optics Research Laboratory, Scripps Institiution of Oceanography, University of California San Diego
