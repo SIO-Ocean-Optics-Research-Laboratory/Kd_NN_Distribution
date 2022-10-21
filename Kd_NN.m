@@ -1,18 +1,18 @@
 function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
-%Takes as input Rrs, sza, and lam, over MODIS wavelengths. Using the 
-%Loisel/Jamet neural net, returns the Kd values for each wavelength and
-%sample.
+%Takes as input Rrs at MODIS wavelengths, sza, and lam which defines output wavelengths for Kd. Using the 
+%Jamet et al. neural network (NN) algorithm, returns the Kd values at output wavelengths given
+%input Rrs and sza.
 %
-%Reference:Jamet, C., H., Loisel and D., Dessailly (2012). Retrieval of the
+%Reference: Jamet, C., H., Loisel and D., Dessailly (2012). Retrieval of the
 %spectral diffuse attenuation coefficient Kd(l) in open and coastal ocean
 %waters using a neural network inversion, Journal of Geophysical
-%Research-Oceans, 117, C10023, doi:10.1029/2012JC008076.
+%Research-Oceans, 117, C10023 (https://doi.org/10.1029/2012JC008076).
 %
-%Requred function inputs:
-%   R_rs [mx5 Double]: Remote sensing reflectance at MODIS wavelengths 
-%       (443, 488, 531, 547, 667 nm) [sr^-1]
+%Required function inputs:
+%   R_rs [mx5 Double]: Remote-sensing reflectance [sr^-1] at MODIS wavelengths 
+%       (443, 488, 531, 547, 667 nm) 
 %
-%   sza [mx1 Double]: Solar zenith angle for each sample [deg] 
+%   sza [mx1 Double]: Solar zenith angle [deg] for each sample of input Rrs 
 %
 %   lam [mx1 Double]: Output wavelength [nm]; also an input parameter for
 %   the neural network
@@ -30,15 +30,15 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
 %       inputs and outputs used to train the neural net
 %
 %Outputs: Kd_est
-%   Kd_est (mx1 Double): The estimated Kd values for each sample at
-%   each wavelength given, or Kd(lam) [m^-1]
+%   Kd_est (mx1 Double): The estimated Kd values at each selected output wavelength lam
+%   for each input sample of Rrs: Kd(lam) [m^-1]
 % 
 %Created: July 6, 2022
 %Completed: July 12, 2022
 %Updates: N/A
 %
 %Aster Taylor and Matthew Kehrli
-%Ocean Optics Research Laboratory
+%SIO Ocean Optics Research Laboratory
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Check function arguments and existence of LUTs
@@ -52,13 +52,13 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
     %number of samples
     nsamp = size(Rrs,1); 
 
-    %copy input lambdas into an array to match the number of samples if
+    %copy input wavelengths (lam) into an array to match the number of samples if
     %only one input wavelength is provided
     if length(lam)==1
         lam=repmat(lam,nsamp,1);
     end
 
-    %copy input szas into an array to match the number of samples if
+    %copy input values of sza into an array to match the number of samples if
     %only one input wavelength is provided
     if length(sza)==1
         sza=repmat(sza,nsamp,1);
