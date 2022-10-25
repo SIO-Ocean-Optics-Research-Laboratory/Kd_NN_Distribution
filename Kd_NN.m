@@ -1,7 +1,7 @@
-function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
+function [Kd_est]=Kd_NN(Rrs,sza,lambda,Kd_LUT)
 %Implements the neural network (NN) algorithm to calculate the diffuse 
 %attenuation coefficient of downwelling planar irradiance (Kd) at one 
-%preselected output light wavelength (lam) using input remote-sensing 
+%preselected output light wavelength (lambda) using input remote-sensing 
 %reflectance (Rrs) at MODIS wavelengths and solar zenith angle (sza)
 %
 %Reference: Jamet, C., H., Loisel and D., Dessailly (2012). Retrieval of
@@ -12,8 +12,8 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
 %NOTE: this code has some modifications and enhancements compared to the
 %%original NN algorithm presented in this 2012 paper
 %
-%Required function inputs:
-%   R_rs [nsamplx5 Double]: Values of spectral remote-sensing reflectance
+%Required function inputs: R_rs, sza, lambda, Kd_LUT
+%   Rrs [nsamplx5 Double]: Values of spectral remote-sensing reflectance
 %   [sr^-1] at MODIS light wavelengths: 443, 488, 531, 547, 667 [nm].
 %   nsampl is the number of "sample" inputs, each consisting of five R_rs
 %   values. Note: nsamp can be any positive integer, i.e., 1, 2, 3, etc.
@@ -23,13 +23,13 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
 %   NN algorithm consists of five Rrs values, i.e. Rrs(443), Rrs(488),
 %   Rrs(531), Rrs(546), Rrs(667), and one value of solar zenith angle, sza.
 %
-%   lam [nsamplx1 Double]: Output light wavelength [nm] at which the
-%   desired value of Kd is estimated for a given "sample" input. Lam serves
-%   as an input parameter for the Kd_NN function and is defined by user.
-%   Note: if multiple "sample" inputs are used (i.e., if nsamp > 1) the
-%   output wavelength lam can be either the same or can differ between the
-%   "sample" inputs which depends on how lam(nsampx1) is defined by user.
-%   Note: light wavelengths are in vacuum
+%   lambda [nsamplx1 Double]: Output light wavelength [nm] at which the
+%   desired value of Kd is estimated for a given "sample" input. Lambda
+%   serves as an input parameter for the Kd_NN function and is defined by
+%   user. Note: if multiple "sample" inputs are used (i.e., if nsamp > 1)
+%   the output wavelength lam can be either the same or can differ between
+%   the "sample" inputs which depends on how lam(nsampx1) is defined by
+%   user. Note: light wavelengths are in vacuum
 %
 %   Kd_LUT [1x1 Structure]: Structure containing three required look-up
 %   tables (LUTs); can be loaded via load('Kd_NN_LUT.mat')
@@ -47,22 +47,20 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
 %   Kd_est (mx1 Double): The estimated value of the average diffuse
 %   attenuation coefficient of downwelling planar irradiance [m^-1] between
 %   the sea surface and first attenuation depth at preselected output light
-%   wavelength (lam) for each "sample" input of spectral Rrs and sza.
-
-% 
-%Created: July 6, 2022
-%Completed: July 12, 2022
-%Updates: N/A
+%   wavelength (lambda) for each "sample" input of spectral Rrs and sza.
 %
-%Aster Taylor and Matthew Kehrli
-%Ocean Optics Research Laboratory, Scripps Institution of Oceanography
+%Version History: 
+%2018-04-04: Original implementation in C written by David Dessailly
+%2020-03-23: Original Matlab version, D. Jorge 
+%2022-09-01: Revised Matlab version, M. Kehrli
+%DARIUSZ: WHEN WE ARE FINISHED, ADD DATE AND Final Revised Matab version: M. Kehrli, R. A. Reynolds and D. Stramski
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Check function arguments and existence of LUTs
     arguments
         Rrs (:,5) double
         sza (:,1) double
-        lam (:,1) double
+        lambda (:,1) double
         Kd_LUT (1,1) struct
     end
 
@@ -70,9 +68,9 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
     nsamp = size(Rrs,1); 
 
     %copy input lam values into an array to match the number of samples if
-    %only one input wavelength lam is provided
-    if length(lam)==1
-        lam=repmat(lam,nsamp,1);
+    %only one input wavelength lambda is provided
+    if length(lambda)==1
+        lambda=repmat(lambda,nsamp,1);
     end
 
     %copy input sza values into an array to match the number of samples if
@@ -88,7 +86,7 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
     Rrs(Rrs<0)=NaN;
 
     %combine inputs
-    inputs = [Rrs,lam,muw];
+    inputs = [Rrs,lambda,muw];
 
     %read in weights and biases for the NN
     weights_1 = Kd_LUT.weights_1; %case 1 weights
@@ -206,7 +204,7 @@ function [Kd_est]=MLP_Kd(x,w1,b1,w2,b2,wout,bout,muKd,stdKd)
 %the NN. In addition, the output from the NN is assumed to be normalized
 %for efficacy, so denormalization constants are added in to reverse this.
 %
-%Inputs: x,w1,b1,w2,b2,wout,bout,muKd,stdKd
+%Inputs: x, w1, b1, w2, b2, wout, bout, muKd, stdKd
 %   x (nsamp x ni Double): The inputs to the NN, with the number of 
 %	"sample" inputs, nsamp, and the number of input neurons, ni. Note 
 %  	that six input neurons are used for case 1 waters and seven 
