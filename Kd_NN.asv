@@ -5,9 +5,9 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
 %reflectance (Rrs) at MODIS wavelengths and solar zenith angle (sza)
 %
 %Reference: Jamet, C., H., Loisel and D., Dessailly (2012). Retrieval of
-%the spectral diffuse attenuation coefficient Kd(l) in open and coastal
-%ocean waters using a neural network inversion, Journal of Geophysical
-%Research-Oceans, 117, C10023 (https://doi.org/10.1029/2012JC008076)
+%%the spectral diffuse attenuation coefficient Kd(l) in open and coastal
+%%ocean waters using a neural network inversion, Journal of %Geophysical
+%%Research-Oceans, 117, C10023 (https://doi.org/10.1029/2012JC008076)
 % 
 %NOTE: this code has some modifications and enhancements compared to the
 %%original NN algorithm presented in this 2012 paper
@@ -94,7 +94,7 @@ function [Kd_est]=Kd_NN(Rrs,sza,lam,Kd_LUT)
     weights_1 = Kd_LUT.weights_1; %case 1 weights
     weights_2 = Kd_LUT.weights_2; %case 2 weights
 
-    %build the neural nets, case 2 then case 1 waters
+    %Build the neural nets, case 2 then case 1 waters
 
     %read in weights and biases for case 2 waters:
     %number of inputs
@@ -239,9 +239,8 @@ function [Kd_est]=MLP_Kd(x,w1,b1,w2,b2,wout,bout,muKd,stdKd)
 %   stdKd (1x1 Double): The std output of Kd values from NN training, for
 %   denormalization of the output
 %
-%Outputs: Kd_est
-%   Kd_est (nsamp x 1 Double): The estimated Kd values for the nsamp
-%   "sample" inputs
+% Outputs: Kd_est
+%       Kd_est (nsamp x 1 Double): The estimated Kd values for the nsamp "sample" inputs
 %        
 %
 %Created: July 6, 2022
@@ -255,14 +254,14 @@ function [Kd_est]=MLP_Kd(x,w1,b1,w2,b2,wout,bout,muKd,stdKd)
 %get the number of rows/samples
 [rx,~]=size(x);
 
-%forward data through the NN:
-%compute first hidden layer, using tanh activation function
+% Forwarding data through the NN:
+% compute first hidden layer, using tanh activation function
 a=1.715905*tanh(0.6666667*(x*w1'+(b1*ones(1,rx))'));
-%compute second hidden layer, using tanh activation function
+% compute second hidden layer, using tanh activation function
 b=1.715905*tanh((2./3)*(a*w2'+(b2*ones(1,rx))'));
 %compute final output 
 y=b*wout'+bout*ones(rx,1);
 
-%denormalize because NN is trained for normalized log-transformed data
+% Denormalize because NN is trained for normalized log-transformed data
 Kd_est=10.^(1.5*y*stdKd+muKd);
 end

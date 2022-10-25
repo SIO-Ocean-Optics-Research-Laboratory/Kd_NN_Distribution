@@ -9,6 +9,14 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
+Published work that uses this software cite the journal article that presents
+the development and validation of the model:
+
+Jamet, C., H., Loisel and D., Dessailly (2012). Retrieval of the spectral 
+diffuse attenuation coefficient Kd(l) in open and coastal ocean waters using 
+a neural network inversion, Journal of Geophysical Research-Oceans, 117, 
+C10023, doi:10.1029/2012JC008076
+
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
