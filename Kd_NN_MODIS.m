@@ -130,7 +130,7 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
         %NaN, send a waringing message, and return
         if any(x(1:4)<0)
             Kd_est = 0;
-            warning(['At least one input of Rrs is negative.' ...
+            warning(['At least one input of Rrs is negative.'...
                 'Output Kd set to nan.'])
             return
         end
@@ -179,7 +179,7 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
         %NaN, send a waringing message, and return
         if any(x(1:5)<0)
             Kd_est = 0;
-            warning(['At least one input of Rrs is negative.' ...
+            warning(['At least one input of Rrs is negative.'...
                 'Output Kd set to nan.'])
             return
         end
