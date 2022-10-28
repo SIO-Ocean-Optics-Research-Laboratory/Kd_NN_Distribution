@@ -28,7 +28,7 @@
 %https://doi.org/10.1016/j.rse.2021.112537
 %
 %%NOTE: this code has some modifications and enhancements compared to the
-%%original NN algorithm presented in this 2012 paper
+%%original NN algorithm presented in Jamet et al. (2012)
 %
 %%Created: October 14, 2022
 %Completed: October 17, 2022
