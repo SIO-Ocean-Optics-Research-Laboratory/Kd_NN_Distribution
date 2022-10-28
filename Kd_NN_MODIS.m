@@ -1,4 +1,4 @@
-function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
+function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
 %Implements the neural network (NN) algorithm to calculate the diffuse 
 %attenuation coefficient of downwelling planar irradiance (Kd) at one 
 %preselected output light wavelength (lambda) using input remote-sensing 
@@ -53,13 +53,11 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
 %       Kd_LUT.train_switch: LUT with means and standard deviations of 
 %       40,000 inputs and outputs used to train the NN
 %
-% DARIUSZ: DO WE NEED TO USE Kd_est? CAN'T WE JUST USE Kd FOR ESTIMATED Kd? LS2_main USES Kd FOR
-% THIS VARIABLE, SO IT MAKES SENSE TO MAKE IT CONSISTENT
-%Outputs: Kd_est
-%   Kd_est [1x1 Double]: The estimated value of the average diffuse 
-%   attenuation coefficient of downwelling planar irradiance [m^-1] between
-%   the sea surface and first attenuation depth at the output light
-%   wavelength (lambda) for input spectral Rrs and sza.
+%Outputs: Kd
+%   Kd [1x1 Double]: The estimated value of the average diffuse attenuation
+%   coefficient of downwelling planar irradiance [m^-1] between the sea
+%   surface and first attenuation depth at the output light wavelength
+%   (lambda) for input spectral Rrs and sza.
 %
 %Version History: 
 %2018-04-04: Original implementation in C written by David Dessailly
@@ -78,8 +76,8 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
     
     %refractive index of seawater
     nw = 1.34;
-    %calculation of muw [dim], the cosine of the angle of refraction of the solar
-    %beam just beneath the sea surface
+    %calculation of muw [dim], the cosine of the angle of refraction of the
+    %solar beam just beneath the sea surface
     muw = cosd(asind(sind(sza)/nw));
     
     %combine inputs into a single array for NN
@@ -92,8 +90,8 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
     mu_switch = train_switch.('MEAN')';
     std_switch = train_switch.('STD')';
     
-    %calculate the blue-green band ratio of reflectance to determine water type of the
-    %input Rrs spectrum
+    %calculate the blue-green band ratio of reflectance to determine water
+    %type of the input Rrs spectrum
     ratio = inputs(2)/inputs(4);
     
     %build NN for clear waters
@@ -129,9 +127,9 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
         x = inputs([1:4,6:7]);
         
         %if any Rrs input to the NN is negative, set the function output to
-        %NaN, send a waringing message, and return
+        %NaN, send a warning message, and return
         if any(x(1:4)<0)
-            Kd_est = 0;
+            Kd = nan;
             warning(['At least one input of Rrs is negative.'...
                 'Output Kd set to nan.'])
             return
@@ -180,7 +178,7 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
         %if any Rrs input to the NN is negative, set the function output to
         %NaN, send a warning message, and return
         if any(x(1:5)<0)
-            Kd_est = 0;
+            Kd = nan;
             warning(['At least one input of Rrs is negative.'...
                 'Output Kd set to nan.'])
             return
@@ -196,7 +194,7 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
     end
 
 %Kd inversion
-[Kd_est] = MLP_Kd(x_N,w1,b1,w2,b2,wout,bout,mu(end),std(end));
+[Kd] = MLP_Kd(x_N,w1,b1,w2,b2,wout,bout,mu(end),std(end));
     
 end
 %end of main code
