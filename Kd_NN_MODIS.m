@@ -27,7 +27,7 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
 %https://doi.org/10.1016/j.rse.2021.112537
 % 
 %NOTE: this code has some modifications and enhancements compared to the
-%%original NN algorithm presented in this 2012 paper
+%%original NN algorithm presented in Jamet et al. (2012)
 %
 %Required function inputs: R_rs, sza, lambda, Kd_LUT
 %   Rrs [1x5 Double]: Values of spectral remote-sensing reflectance [sr^-1]
@@ -39,7 +39,7 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
 %   lambda [1x1 Double]: Output light wavelength [nm] at which the desired
 %   value of Kd is estimated for a given input. Lambda serves as an input
 %   parameter for the Kd_NN function and is defined by user. Note: light
-%   wavelengths are in vacuum
+%   wavelength is in vacuum
 %
 %   Kd_LUT [1x1 Structure]: Structure containing three required look-up
 %   tables (LUTs); can be loaded via load('Kd_NN_LUT.mat')
@@ -53,6 +53,8 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
 %       Kd_LUT.train_switch: LUT with means and standard deviations of 
 %       40,000 inputs and outputs used to train the NN
 %
+% DARIUSZ: DO WE NEED TO USE Kd_est? CAN'T WE JUST USE Kd FOR ESTIMATED Kd? LS2_main USES Kd FOR
+% THIS VARIABLE, SO IT MAKES SENSE TO MAKE IT CONSISTENT
 %Outputs: Kd_est
 %   Kd_est [1x1 Double]: The estimated value of the average diffuse 
 %   attenuation coefficient of downwelling planar irradiance [m^-1] between
@@ -76,9 +78,9 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
     
     %refractive index of seawater
     nw = 1.34;
-    %calculation of muw, the cosine of the angle of refraction of the solar
+    %calculation of muw [dim], the cosine of the angle of refraction of the solar
     %beam just beneath the sea surface
-    muw = cosd(asind(sind(sza)/nw)); %[dim]
+    muw = cosd(asind(sind(sza)/nw));
     
     %combine inputs into a single array for NN
     inputs = [Rrs,lambda,muw];
@@ -90,7 +92,7 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
     mu_switch = train_switch.('MEAN')';
     std_switch = train_switch.('STD')';
     
-    %calculate the blue green band ratio to determine trophic state of the
+    %calculate the blue-green band ratio of reflectance to determine water type of the
     %input Rrs spectrum
     ratio = inputs(2)/inputs(4);
     
@@ -176,7 +178,7 @@ function [Kd_est]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
         x = inputs;
         
         %if any Rrs input to the NN is negative, set the function output to
-        %NaN, send a waringing message, and return
+        %NaN, send a warning message, and return
         if any(x(1:5)<0)
             Kd_est = 0;
             warning(['At least one input of Rrs is negative.'...
