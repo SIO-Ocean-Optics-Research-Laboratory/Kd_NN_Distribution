@@ -236,7 +236,7 @@ Kd = nan(size(lambda));
 
 %calculate Kd using NN
 for i = 1:numel(lambda)
-    Kd(i)=Kd_NN_MODIS(sza(i),lambda(i),Rrs(i,:),Kd_NN_LUT_MODIS);
+    Kd(i)=Kd_NN_MODIS(Rrs(i,:),sza(i),lambda(i),Kd_NN_LUT_MODIS);
 end
 
 %save inputs and outputs into an excel file

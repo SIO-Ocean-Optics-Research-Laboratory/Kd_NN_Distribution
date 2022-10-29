@@ -1,4 +1,4 @@
-function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_NN_LUT_MODIS)
+function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
 %Implements the neural network (NN) algorithm to calculate the diffuse 
 %attenuation coefficient of downwelling planar irradiance (Kd) at one 
 %preselected output light wavelength (lambda) using input remote-sensing 
@@ -68,9 +68,9 @@ function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_NN_LUT_MODIS)
 
 %% Check function arguments and existence of LUTs
     arguments
+        Rrs (1,5) double
         sza (1,1) double 
         lambda (1,1) double
-        Rrs (1,5) double
         Kd_NN_LUT_MODIS (1,1) struct
     end
     
