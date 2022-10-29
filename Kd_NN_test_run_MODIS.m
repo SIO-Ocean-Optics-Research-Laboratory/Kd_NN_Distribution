@@ -2,7 +2,7 @@
 %Test script for the Kd NN code. The Kd NN code is run for 100 specified
 %inputs of multispectral remote-sensing reflectance (Rrs) and solar zenith
 %angles (sza). The resulting output from the test script is saved to
-%Kd_NN_test_run_YYYYMMDD.xls for comparison with the provided
+%Kd_NN_test_run_MODIS_YYYYMMDD.xls for comparison with the provided
 %output file Kd_NN_test_run_MODIS.xls
 %
 %References: 
