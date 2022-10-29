@@ -1,4 +1,4 @@
-function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
+function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_NN_LUT_MODIS)
 %Implements the neural network (NN) algorithm to calculate the diffuse 
 %attenuation coefficient of downwelling planar irradiance (Kd) at one 
 %preselected output light wavelength (lambda) using input remote-sensing 
@@ -41,17 +41,17 @@ function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
 %   parameter for the Kd_NN function and is defined by user. Note: light
 %   wavelength is in vacuum
 %
-%   Kd_LUT [1x1 Structure]: Structure containing three required look-up
-%   tables (LUTs); can be loaded via load('Kd_NN_LUT.mat')
+%   Kd_NN_LUT_MODIS [1x1 Structure]: Structure containing three required
+%   look-up tables (LUTs); can be loaded via load('Kd_NN_LUT_MODIS.mat')
 %
-%       Kd_LUT.weights_1: LUT with weights and biases from NN for clear
-%       waters (where Rrs(488)/Rrs(547) >= 0.85)
+%       Kd_NN_LUT_MODIS.weights_1: LUT with weights and biases from NN for
+%       clear waters (where Rrs(488)/Rrs(547) >= 0.85)
 %
-%       Kd_LUT.weights_2: LUT with weights and biases from NN for turbid
-%       waters (where Rrs(488)/Rrs(547) < 0.85)
+%       Kd_NN_LUT_MODIS.weights_2: LUT with weights and biases from NN for
+%       turbid waters (where Rrs(488)/Rrs(547) < 0.85)
 %
-%       Kd_LUT.train_switch: LUT with means and standard deviations of 
-%       40,000 inputs and outputs used to train the NN
+%       Kd_NN_LUT_MODIS.train_switch: LUT with means and standard
+%       deviations of 40,000 inputs and outputs used to train the NN
 %
 %Outputs: Kd
 %   Kd [1x1 Double]: The estimated value of the average diffuse attenuation
@@ -71,7 +71,7 @@ function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
         sza (1,1) double 
         lambda (1,1) double
         Rrs (1,5) double
-        Kd_LUT (1,1) struct
+        Kd_NN_LUT_MODIS (1,1) struct
     end
     
     %refractive index of seawater
@@ -86,7 +86,7 @@ function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
     %mean and standard deviation of input and output parameters from LUT
     %for each NN; determined from training dataset of 40,000 inputs and
     %outputs to normalize NN
-    train_switch = Kd_LUT.train_switch;
+    train_switch = Kd_NN_LUT_MODIS.train_switch;
     mu_switch = train_switch.('MEAN')';
     std_switch = train_switch.('STD')';
     
@@ -97,7 +97,7 @@ function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
     %build NN for clear waters
     if ratio >= 0.85 
         %read in NN weights and biases for clear waters
-        weights_1 = Kd_LUT.weights_1;
+        weights_1 = Kd_NN_LUT_MODIS.weights_1;
         
         %number of input neurons in the NN
         ne = 6;
@@ -146,7 +146,7 @@ function [Kd]=Kd_NN_MODIS(sza,lambda,Rrs,Kd_LUT)
     %Build NN for turbid waters
     elseif ratio < 0.85
         %read in NN weights and biases for turbid waters
-        weights_2 = Kd_LUT.weights_2;
+        weights_2 = Kd_NN_LUT_MODIS.weights_2;
 
         %number of input neurons in the NN
         ne = 7;

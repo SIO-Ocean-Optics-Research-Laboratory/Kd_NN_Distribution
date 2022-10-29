@@ -27,11 +27,11 @@
 %remote sensing reflectance. Remote Sensing of Environment, 263, 112537–.
 %https://doi.org/10.1016/j.rse.2021.112537
 %
-%%NOTE: this code has some modifications and enhancements compared to the
-%%original NN algorithm presented in Jamet et al. (2012)
+%NOTE: this code has some modifications and enhancements compared to the
+%original NN algorithm presented in Jamet et al. (2012)
 %
 %%Created: October 14, 2022
-%Completed: October 17, 2022
+%Completed: October 29, 2022
 %Updates: N/A
 %
 %M. Kehrli, R. A. Reynolds, and D. Stramski 
@@ -236,7 +236,7 @@ Kd = nan(size(lambda));
 
 %calculate Kd using NN
 for i = 1:numel(lambda)
-    Kd(i)=Kd_NN_MODIS(sza(i),lambda(i),Rrs(i,:),Kd_NN_LUT);
+    Kd(i)=Kd_NN_MODIS(sza(i),lambda(i),Rrs(i,:),Kd_NN_LUT_MODIS);
 end
 
 %save inputs and outputs into an excel file
