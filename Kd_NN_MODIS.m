@@ -201,7 +201,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Additional subfunctions that are called
-function [Kd_est]=MLP_Kd(x,w1,b1,w2,b2,wout,bout,muKd,stdKd)
+function [Kd]=MLP_Kd(x,w1,b1,w2,b2,wout,bout,muKd,stdKd)
 %Computes the NN output from the inputs. Assumes 2 hidden layers, and
 %utilizes a tanh activation function. The inputs are fed into the first
 %layer as a matrix, then the second layer, then are collapsed to an output
@@ -247,8 +247,8 @@ function [Kd_est]=MLP_Kd(x,w1,b1,w2,b2,wout,bout,muKd,stdKd)
 %   stdKd [1x1 Double]: The std output of Kd values from NN training, for
 %   denormalization of the output
 %
-%Outputs: Kd_est
-%   Kd_est [1 x 1 Double]: The estimated Kd value obtained from the NN
+%Outputs: Kd
+%   Kd [1 x 1 Double]: The estimated Kd value obtained from the NN
 %        
 %Created: July 6, 2022
 %Completed: July 12, 2022
@@ -270,5 +270,5 @@ b=1.715905*tanh((2./3)*(a*w2'+(b2*ones(1,rx))'));
 y=b*wout'+bout*ones(rx,1);
 
 %denormalize because NN is trained for normalized log-transformed data
-Kd_est=10.^(1.5*y*stdKd+muKd);
+Kd=10.^(1.5*y*stdKd+muKd);
 end

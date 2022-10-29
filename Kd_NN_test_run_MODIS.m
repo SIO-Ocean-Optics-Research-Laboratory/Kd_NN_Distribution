@@ -3,7 +3,7 @@
 %inputs of multispectral remote-sensing reflectance (Rrs) and solar zenith
 %angles (sza). The resulting output from the test script is saved to
 %Kd_NN_test_run_YYYYMMDD.xls for comparison with the provided
-%output file Kd_NN_test_run.xls
+%output file Kd_NN_test_run_MODIS.xls
 %
 %References: 
 %
@@ -231,20 +231,20 @@ lambda = [430;531;645;570;520;430;700;400;488;555;620;500;650;610;...
 %input Kd NN LUTs
 load 'Kd_NN_LUT_MODIS.mat'
 
-%preallocate Kd_est
-Kd_est = nan(size(lambda));
+%preallocate Kd
+Kd = nan(size(lambda));
 
 %calculate Kd using NN
 for i = 1:numel(lambda)
-    Kd_est(i)=Kd_NN_MODIS(sza(i),lambda(i),Rrs(i,:),Kd_NN_LUT);
+    Kd(i)=Kd_NN_MODIS(sza(i),lambda(i),Rrs(i,:),Kd_NN_LUT);
 end
 
 %save inputs and outputs into an excel file
-T = table(Rrs(:,1),Rrs(:,2),Rrs(:,3),Rrs(:,4),Rrs(:,5),sza,lambda,Kd_est);
+T = table(Rrs(:,1),Rrs(:,2),Rrs(:,3),Rrs(:,4),Rrs(:,5),sza,lambda,Kd);
 T.Properties.VariableNames = {'Input Rrs(443) [1/sr]',...
     'Input Rrs(488) [1/sr]','Input Rrs(531) [1/sr]',...
     'Input Rrs(547) [1/sr]','Input Rrs(667) [1/sr]','Input sza [deg]',...
     'Output Wavelength [nm]','Output Kd [1/m]'};
 FormatOut = 'YYYYMMDD';
 outfile=[cd '\Kd_NN_test_run_MODIS_' datestr(datetime,FormatOut)];
-writetable(T,outfile,'FileType','spreadsheet','Sheet','Kd_NN_Output')
+writetable(T,outfile,'FileType','spreadsheet','Sheet','Kd_NN_MODIS_Output')
