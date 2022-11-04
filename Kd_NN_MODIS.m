@@ -63,7 +63,7 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
 %2018-04-04: Original implementation in C written by David Dessailly
 %2020-03-23: Original Matlab version, D. Jorge 
 %2022-09-01: Revised Matlab version, M. Kehrli
-%2022-11-03: Final Revised Matab version: M. Kehrli, R. A. Reynolds and D. Stramski
+%2022-11-03: Final Revised Matab version, M. Kehrli, R. A. Reynolds and D. Stramski
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Check function arguments and existence of LUTs
