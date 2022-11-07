@@ -20,5 +20,5 @@ Spreadsheet containing the input and resulting output data obtained from the app
 
 ---
 Contributors: Matthew Kehrli, Aster Taylor, Rick A. Reynolds, and Dariusz Stramski\
-Contacts: Matthew Kehrli (mdkehrli@ucsd.edu | mdkehrli@gmail.com), Rick Reynolds (rreynolds@ucsd.edu), Dariusz Stramski (dstramski@ucsd.edu)\
+Contacts: Matthew Kehrli (mdkehrli@ucsd.edu | mdkehrli@gmail.com), Rick Reynolds (rreynolds@ucsd.edu), Dariusz Stramski (dstramski@ucsd.edu), Cédric Jamet (cedric.jamet@univ-littoral.fr)\
 Ocean Optics Research Laboratory, Scripps Institution of Oceanography, University of California San Diego
