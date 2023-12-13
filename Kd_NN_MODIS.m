@@ -59,11 +59,16 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
 %   surface and first attenuation depth at the output light wavelength
 %   (lambda) for input spectral Rrs and sza.
 %
+%Version 1.1 (v1.1)
+%
 %Version History: 
 %2018-04-04: Original implementation in C written by David Dessailly
 %2020-03-23: Original Matlab version, D. Jorge 
 %2022-09-01: Revised Matlab version, M. Kehrli
-%2022-11-03: Final Revised Matab version, M. Kehrli, R. A. Reynolds and D. Stramski
+%2022-11-03: Final Revised MATLAB version (v1.0), M. Kehrli, R. A. Reynolds
+%and D. Stramski
+%2023-10-10: Corrected weights and biases in KdNN LUT for clear waters
+%(v1.1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Check function arguments and existence of LUTs
