@@ -63,9 +63,9 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
 %
 %Version History: 
 %2018-04-04: Original implementation in C written by David Dessailly
-%2020-03-23: Original Matlab version, D. Jorge 
-%2022-09-01: Revised Matlab version, M. Kehrli
-%2022-11-03: Final Revised MATLAB version (v1.0), M. Kehrli, R. A. Reynolds
+%2020-03-23: Original MATLAB version, D. Jorge 
+%2022-09-01: Revised MATLAB version, M. Kehrli
+%2022-11-03: Final revised MATLAB version (v1.0), M. Kehrli, R. A. Reynolds
 %and D. Stramski
 %2023-10-10: Corrected weights and biases in KdNN LUT for clear waters
 %(v1.1)
