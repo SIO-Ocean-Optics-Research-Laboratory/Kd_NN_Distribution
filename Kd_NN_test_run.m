@@ -229,14 +229,14 @@ lambda = [430;531;645;570;520;430;700;400;488;555;620;500;650;610;...
     480];
 
 %input Kd NN LUTs
-load 'Kd_NN_LUT_MODIS.mat'
+load 'Kd_NN_LUT_MODIS_20250220.mat'
 
 %preallocate Kd
 Kd = nan(size(lambda));
 
 %calculate Kd using NN
 for i = 1:numel(lambda)
-    Kd(i)=Kd_NN_MODIS(Rrs(i,:),sza(i),lambda(i),Kd_NN_LUT_MODIS);
+    Kd(i)=Kd_NN_MODIS_CJ_20250220(Rrs(i,:),sza(i),lambda(i),Kd_NN_LUT_MODIS_20250220);
 end
 
 %save inputs and outputs into an excel file

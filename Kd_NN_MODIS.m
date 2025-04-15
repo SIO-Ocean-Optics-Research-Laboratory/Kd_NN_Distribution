@@ -1,4 +1,4 @@
-function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
+function [Kd]=Kd_NN_MODIS_CJ_20250220(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
 %Implements the neural network (NN) algorithm to calculate the diffuse 
 %attenuation coefficient of downwelling planar irradiance (Kd) at one 
 %preselected output light wavelength (lambda) using input remote-sensing 
@@ -59,7 +59,7 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
 %   surface and first attenuation depth at the output light wavelength
 %   (lambda) for input spectral Rrs and sza.
 %
-%Version 1.1 (v1.1)
+%Version 1.3 (v1.3)
 %
 %Version History: 
 %2018-04-04: Original implementation in C written by David Dessailly
@@ -68,7 +68,11 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
 %2022-11-03: Final revised MATLAB version (v1.0), M. Kehrli, R. A. Reynolds
 %and D. Stramski
 %2023-10-10: Corrected weights and biases in KdNN LUT for clear waters
-%(v1.1)
+%2024-09-05: Updated structure, weights and biases provided by CJ (v1.2)
+%and implemented in MATLAB by MK in September, 2024
+%2025-02-20: Updated structure, weights and biases provided by CJ (v1.3)
+%and implemented in MATLAB by MK in April, 2024
+%(v1.3)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Check function arguments and existence of LUTs
@@ -86,7 +90,7 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
     muw = cosd(asind(sind(sza)/nw));
     
     %combine inputs into a single array for NN
-    inputs = [Rrs,lambda,muw];
+    inputs = [Rrs,muw,lambda]; %MK edit from inputs = [Rrs,lambda,muw]
     
     %mean and standard deviation of input and output parameters from LUT
     %for each NN; determined from training dataset of 40,000 inputs and
@@ -109,7 +113,7 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
         %number of neurons on the first hidden layer in the NN
         nc1 = 8;
         %number of neurons on the second hidden layer in the NN
-        nc2 = 6;
+        nc2 = 8;
         %number of neurons on the output layer in the NN
         ns = 1;
         
@@ -125,8 +129,8 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
         
         %mean and stadard deviation of input and output parameters from
         %training dataset; remove Rrs(667) data for clear waters
-        mu = mu_switch([2:5,7:9]);
-        std = std_switch([2:5,7:9]);
+        mu = mu_switch([2:5,8 7 9]); %MK edit from mu = mu_switch([2:5 7:9])
+        std = std_switch([2:5,8 7 9]); %MK edit from std = std_switch([2:5 7:9]) 
         
         %set NN input for clear waters
         x = inputs([1:4,6:7]);
@@ -144,7 +148,7 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
         x_N = ones(size(x));
         
         %normalize input data
-        for j = 1:6
+        for j = 1:numel(x)
             x_N(:,j) = (2/3)*((x(:,j)-mu(j))/std(j));
         end
     
@@ -156,9 +160,9 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
         %number of input neurons in the NN
         ne = 7;
         %number of neurons on the first hidden layer in the NN
-        nc1 = 9;
+        nc1 = 4;
         %number of neurons on the second hidden layer in the NN
-        nc2 = 6;
+        nc2 = 4;
         %number of neurons on the output layer in the NN
         ns = 1;
         
@@ -174,8 +178,8 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
         
         %mean and stadard deviation of input and output parameters from
         %training dataset
-        mu = mu_switch(2:9);
-        std = std_switch(2:9);
+        mu = mu_switch([2:6 8 7 9]); %MK edit from mu = mu_switch(2:9)
+        std = std_switch([2:6 8 7 9]); %MK edit from std = std_switch(2:9)
         
         %set NN input for turbid waters
         x = inputs;
@@ -193,7 +197,7 @@ function [Kd]=Kd_NN_MODIS(Rrs,sza,lambda,Kd_NN_LUT_MODIS)
         x_N = ones(size(x));
         
         %normalize input data
-        for j = 1:7 
+        for j = 1:numel(x) 
             x_N(:,j) = (2/3)*((x(:,j)-mu(j))/std(j));
         end
     end
