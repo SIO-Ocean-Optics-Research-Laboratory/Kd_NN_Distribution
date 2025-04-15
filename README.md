@@ -1,22 +1,34 @@
 # Kd_NN_Distribution
 ---
-An implementation of the neural network algorithm created originally by Cedric Jamet and co-workers for estimating the K<sub>d</sub> values at any wavelength. This version of the Kd_NN model can produce K<sub>d</sub> at any wavelength (but currently recommended for the visible spectral range because no validation was carried out outside this range), using input R<sub>rs</sub> at five light wavelengths (443 nm, 488 nm, 531 nm, 547 nm, 667 nm) corresponding to spectral bands available on ocean color sensor MODIS. The complete development and validation of the original Kd_NN model is described in [Jamet et al., 2012](https://doi.org/10.1029/2012JC008076) and updated in [Loisel et al., 2018](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JC013632) and [Jorge et al., 2021](https://doi.org/10.1016/j.rse.2021.112537). The presented version of the Kd_NN model source code is in MATLAB file format. In this version of the Kd_NN code we introduced some changes with the primary purpose to streamline the structure of the code and facilitate its application by users. The Kd_NN software can be used in conjunction with the inverse reflectance LS2 model to enable estmation of the inherent optical properties of seawater (see the separate LS2_Distribution repository). 
+An implementation of the neural network algorithm created originally by Cedric Jamet and co-workers for estimating the K<sub>d</sub> values at any wavelength. This version of the Kd_NN model can produce K<sub>d</sub> at any wavelength (but currently recommended for the visible spectral range because no validation was carried out outside this range), using input R<sub>rs</sub> at five light wavelengths (443 nm, 488 nm, 531 nm, 547 nm, 667 nm) corresponding to spectral bands available on ocean color sensor MODIS. The complete development and validation of the original Kd_NN model is described in [Jamet et al., 2012](https://doi.org/10.1029/2012JC008076) and updated in [Loisel et al., 2018](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JC013632) and [Jorge et al., 2021](https://doi.org/10.1016/j.rse.2021.112537). The presented version of the Kd_NN model source code is in MATLAB file format. In this version of the Kd_NN code we introduced some changes with the primary purpose to streamline the structure of the code and facilitate its application by users. The Kd_NN software can be used in conjunction with the inverse reflectance LS2 model to enable estimation of the inherent optical properties of seawater (see the separate LS2_Distribution repository). 
 
 This README document provides information about the files within the Kd_NN_Distribution repository.
 
 ---
 
 ## Kd_NN_MODIS.m:
-Neural network model to compute the K<sub>d</sub> values at a single preselected output light wavelength for a given set of input values of spectral R<sub>rs</sub>(λ) and solar zenith angle, where λ is at MODIS wavelengths. Returns K<sub>d</sub>(λ). See supporting documentation for further details.
+Neural network model to compute the K<sub>d</sub> values at a single preselected output light wavelength for a given set of input values of spectral R<sub>rs</sub>(λ) and solar zenith angle, where λ is at 5 select MODIS wavelengths. Returns K<sub>d</sub>(λ). See supporting documentation for further details.
+
+## Kd_NN_PACE.m:
+Neural network model to compute the K<sub>d</sub> values at a single preselected output light wavelength for a given set of input values of spectral R<sub>rs</sub>(λ) and solar zenith angle, where λ is at 12 select PACE wavelengths. Returns K<sub>d</sub>(λ). See supporting documentation for further details.
 
 ## Kd_NN_LUT_MODIS.mat:
 Look-up tables (LUTs) necessary to run Kd_NN_MODIS.m. The structure contains three fields, each of which is necessary to run the neural network. See Kd_NN_MODIS.m function documentation for further details about the .mat file.
 
+## Kd_NN_LUT_PACE.mat:
+Look-up tables (LUTs) necessary to run Kd_NN_PACE.m. The structure contains three fields, each of which is necessary to run the neural network. See Kd_NN_PACE.m function documentation for further details about the .mat file.
+
 ## Kd_NN_test_run_MODIS.m:
-Script which tests Kd_NN_MODIS.m on 100 sample inputs of spectral R<sub>rs</sub>(λ) defined at MODIS bands, each accompanied with input solar zenith angle. The code calculates K<sub>d</sub> at output light wavelengths within the input domain. Note that the output light wavelength can be the same or can differ between the sample inputs, where a single sample input is defined by a set of five spectral values of R<sub>rs</sub>(λ) at MODIS wavelengths and solar zenith angle.
+Script which tests Kd_NN_MODIS.m on 100 sample inputs of spectral R<sub>rs</sub>(λ) defined at 5 MODIS bands, each accompanied with input solar zenith angle. The code calculates K<sub>d</sub> at output light wavelengths within the input domain. Note that the output light wavelength can be the same or can differ between the sample inputs, where a single sample input is defined by a set of 5 spectral values of R<sub>rs</sub>(λ) at MODIS wavelengths and solar zenith angle.
+
+## Kd_NN_test_run_PACE.m:
+Script which tests Kd_NN_PACE.m on a single sample input of spectral R<sub>rs</sub>(λ) defined at 12 PACE bands, each accompanied with input solar zenith angle. The code calculates K<sub>d</sub> at a single output light wavelength within the input domain. Note that the output light wavelength can be the same or can differ between the sample inputs, where a single sample input is defined by a set of 12 spectral values of R<sub>rs</sub>(λ) at PACE wavelengths and solar zenith angle.
 
 ## Kd_NN_test_run_MODIS.xls:
 Spreadsheet containing the input and resulting output data obtained from the application of the Kd_NN_MODIS function on 100 sample inputs to determine K<sub>d</sub> at various output wavelengths within the input domain. The file is the original output file generated by Kd_NN_test_run_MODIS.m.
+
+## Kd_NN_test_run_PACE.xls:
+Spreadsheet containing the input and resulting output data obtained from the application of the Kd_NN_PACE function on an example sample input to determine K<sub>d</sub> at a single output wavelength within the input domain. The file is the original output file generated by Kd_NN_test_run_PACE.m.
 
 ---
 Contributors: Matthew Kehrli, Aster Taylor, Rick A. Reynolds, and Dariusz Stramski\
